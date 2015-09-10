@@ -17,7 +17,7 @@ extern unsigned long __STACK_END;
 
 
 /* External declarations for the interrupt handlers used by the application. */
-
+extern void systick_isr(void);
 /* To be added by user */
 
 
@@ -43,7 +43,7 @@ void (* const interruptVectors[])(void) =
     defaultISR,                             /* Debug monitor handler     */
     0,                                      /* Reserved                  */
     defaultISR,                             /* The PendSV handler        */
-    defaultISR,                             /* The SysTick handler       */
+    systick_isr,                             /* The SysTick handler       */
     defaultISR,                             /* PSS ISR                   */
     defaultISR,                             /* CS ISR                    */
     defaultISR,                             /* PCM ISR                   */
