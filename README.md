@@ -1,4 +1,4 @@
-# MSP432LaunchPadBasePrj
+# MSP432LaunchPadPrjTemplate
 ##硬件平台
 
 * TI LaunchPad MSP—_EXP432P401R
