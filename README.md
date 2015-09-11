@@ -2,12 +2,12 @@
 ##硬件平台
 
 * TI LaunchPad MSP—_EXP432P401R
-* Some Arduino Module
+* Some Arduino Modules
 * various sensors
 
 ##软件tool-chain
 
-* TI compiler
+* TI compiler V5.2.5(or laster version)
 * TI Msp432P4XX_drivelib & MSPware
 
 ##代码基于
