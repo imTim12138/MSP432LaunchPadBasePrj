@@ -17,3 +17,6 @@
 ##参与请联系管理
 * weibo:[@墨墨无闻小蛋塔](http://weibo.com/toycc2h)
 * qq:695447695
+
+##编码风格
+* BSD/Allman(Tabs only its size recommended 3)
