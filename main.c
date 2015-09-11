@@ -22,9 +22,13 @@
 		16000                                       // 16000 Period
 	};
 
-/* Statics ------------------------------------------------------------- */
-	static volatile uint_fast16_t resultsBuffer[UINT8_MAX];
-	static volatile uint8_t resPos;
+/* Variables ------------------------------------------------------------- */
+	volatile uint16_t adcResult;
+
+/* Static Functions ---------------------------------------------------- */
+	static void Prj_GPIO_Config(void);
+	static void Prj_ADC14_Config(void);
+	static void Prj_SysTick_Config(void);
 
 /* Function Protype ---------------------------------------------------- */
 int main(void) 
@@ -33,11 +37,18 @@ int main(void)
 	WDT_A_holdTimer();
 	Interrupt_enableSleepOnIsrExit();
 
-
+	/* Driver Configurations */
+	Prj_GPIO_Config();
+	Prj_ADC14_Config();
+	Prj_SysTick_Config();
 
 	/* Enabling interrupts */
 	Interrupt_enableMaster();
 	Interrupt_enableInterrupt(INT_ADC14);
+
+	/* Triggering the start of the sample */
+	ADC14_enableConversion();
+	ADC14_toggleConversionTrigger();
 
 	while (1)
 	{
@@ -45,7 +56,7 @@ int main(void)
 	}
 }
 
-void GPIO_Config(void)
+static void Prj_GPIO_Config(void)
 {
 	/* Configuring GPIO as an output LED*/
 	GPIO_setAsOutputPin(GPIO_PORT_P1, GPIO_PIN0);
@@ -54,7 +65,7 @@ void GPIO_Config(void)
 	GPIO_PIN6 | GPIO_PIN5 | GPIO_PIN4, GPIO_TERTIARY_MODULE_FUNCTION);
 }
 
-void ADC14_Config(void)
+static void Prj_ADC14_Config(void)
 {
    /* Initializing ADC (MCLK/1/1) */
    ADC14_enableModule();
@@ -64,17 +75,17 @@ void ADC14_Config(void)
     * with use of external references */
    ADC14_configureSingleSampleMode(ADC_MEM0, true);
    ADC14_configureConversionMemory
-		(ADC_MEM0, ADC_VREFPOS_EXTPOS_VREFNEG_EXTNEG,ADC_INPUT_A0, true);
+	(ADC_MEM0, ADC_VREFPOS_EXTPOS_VREFNEG_EXTNEG,ADC_INPUT_A0, true);
 
    /* Enabling sample timer in auto iteration mode and interrupts*/
    ADC14_enableSampleTimer(ADC_AUTOMATIC_ITERATION);
    ADC14_enableInterrupt(ADC_INT0);
 }
 
-void SysTick_Config(void)
+static void Prj_SysTick_Config(void)
 {
 	/* Configuring SysTick to trigger at 1500000
-	*(MCLK is 3MHz so this will make it toggle every 0.5s) */
+	 * (MCLK is 3MHz so this will make it toggle every 0.5s)*/
 	SysTick_enableModule();
 	SysTick_setPeriod(1500000);
 	SysTick_enableInterrupt();
