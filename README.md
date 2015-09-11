@@ -16,7 +16,7 @@
 
 ##参与
 * weibo:[@墨墨无闻小蛋塔](http://weibo.com/toycc2h)
-* qq:695447695
+* qq:2759057848
 
 ##编码风格
 * BSD/Allman(Tabs only and Tabs size recommended 3)
