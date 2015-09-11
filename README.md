@@ -19,4 +19,4 @@
 * qq:695447695
 
 ##编码风格
-* BSD/Allman(Tabs only its size recommended 3)
+* BSD/Allman(Tabs only and Tabs size recommended 3)
