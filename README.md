@@ -7,7 +7,7 @@
 
 ##软件工具
 
-* TI compiler V5.2.5(or laster version)
+* TI compiler V5.2.5(or later version)
 * TI Msp432P4XX_drivelib & MSPware
 
 ##代码基于
