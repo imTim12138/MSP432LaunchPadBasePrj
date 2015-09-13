@@ -22,27 +22,30 @@
 		16000                                       // 16000 Period
 	};
 
-/* Variables ------------------------------------------------------------- */
+/* Variables ----------------------------------------------------------- */
 	volatile uint16_t adcResult;
+	uint32_t mchlValue;
 
 /* Static Functions ---------------------------------------------------- */
 	static void Prj_GPIO_Config(void);
 	static void Prj_ADC14_Config(void);
 	static void Prj_SysTick_Config(void);
+	static void Prj_CS_Config(void);
 
 /* Function Protype ---------------------------------------------------- */
 int main(void) 
 {
 	/* Halting WDT */
 	WDT_A_holdTimer();
-	Interrupt_enableSleepOnIsrExit();
 
 	/* Driver Configurations */
+	Prj_CS_Config();
 	Prj_GPIO_Config();
 	Prj_ADC14_Config();
 	Prj_SysTick_Config();
 
 	/* Enabling interrupts */
+	Interrupt_enableSleepOnIsrExit();
 	Interrupt_enableMaster();
 	Interrupt_enableInterrupt(INT_ADC14);
 
@@ -50,6 +53,8 @@ int main(void)
 	ADC14_enableConversion();
 	ADC14_toggleConversionTrigger();
 
+
+	mchlValue = CS_getMCLK();
 	while (1)
 	{
 		PCM_gotoLPM0();
@@ -89,4 +94,23 @@ static void Prj_SysTick_Config(void)
 	SysTick_enableModule();
 	SysTick_setPeriod(1500000);
 	SysTick_enableInterrupt();
+}
+
+static void Prj_CS_Config(void)
+{
+	/* Setting the external clock frequency. This API is optional, but will
+	* come in handy if the user ever wants to use the getMCLK/getACLK/etc
+	* functions
+	*/
+	CS_setExternalClockSourceFrequency(32000,CS_48MHZ);
+
+	/* Starting HFXT in non-bypass mode without a timeout. Before we start
+	* we have to change VCORE to 1 to support the 48MHz frequency */
+	PCM_setCoreVoltageLevel(PCM_VCORE1);
+	FlashCtl_setWaitState(FLASH_BANK0, 2);
+	FlashCtl_setWaitState(FLASH_BANK1, 2);
+	CS_startHFXT(false);
+
+	/* Initializing MCLK to HFXT (effectively 48MHz) */
+	CS_initClockSignal(CS_MCLK, CS_HFXTCLK_SELECT, CS_CLOCK_DIVIDER_1);
 }
